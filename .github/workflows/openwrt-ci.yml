@@ -8,14 +8,11 @@
 name: OpenWrt-CI
 
 on:
-  schedule:
-    - cron: 0 20 * * *
+#  schedule:
+#    - cron: 0 20 * * *
   push:
     branches:    
-      - 'releases/**'
       - '!releases/**-alpha'
-      # Push events to branches matching refs/heads/mona/octocat
-      - 'mona/octocat'
       # Push events to branches matching refs/heads/releases/10
       - 'releases/**'
     # Sequence of patterns matched against refs/tags
@@ -108,6 +105,23 @@ jobs:
         with:
           name: OpenWrt_firmware
           path: ./bin/targets/
+          
+        
+      
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: ${{ steps.get_version.outputs.VERSION }}
+          file: ./artifact/firmware/*
+          draft: false
+          prerelease: false
   
 
       - name: Upload release asset
