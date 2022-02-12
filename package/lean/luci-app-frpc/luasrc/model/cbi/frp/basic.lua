@@ -86,7 +86,6 @@ e.rmempty = false
 e:depends("protocol","tcp")
 
 e = t:taboption("other", Value, "http_proxy", translate("HTTP PROXY"))
-e.datatype = "uinteger"
 e.placeholder = "http://user:pwd@192.168.1.128:8080"
 e:depends("enable_http_proxy",1)
 e.optional = false
@@ -124,20 +123,17 @@ e.rmempty=false
 e = t:taboption("other", Value, "admin_port", translate("Admin Web Port"))
 e.datatype = "port"
 e.default = 7400
-e.rmempty = false
 e:depends("admin_enable",1)
 
 e = t:taboption("other", Value, "admin_user", translate("Admin Web UserName"))
 e.optional = false
 e.default = "admin"
-e.rmempty=false
 e:depends("admin_enable",1)
 
 e = t:taboption("other", Value, "admin_pwd", translate("Admin Web PassWord"))
 e.optional = false
 e.default = "admin"
 e.password = true
-e.rmempty = false
 e:depends("admin_enable",1)
 
 e = t:taboption("log", TextValue,"log")
