@@ -65,6 +65,7 @@ define KernelPackage/fb
 	CONFIG_FRAMEBUFFER_CONSOLE=y \
 	CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y \
 	CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y \
+	CONFIG_FRAMEBUFFER_CONSOLE_LEGACY_ACCELERATION=y \
 	CONFIG_FONTS=y \
 	CONFIG_FONT_8x8=y \
 	CONFIG_FONT_8x16=y \
@@ -223,6 +224,7 @@ $(eval $(call KernelPackage,fb-tft-ili9486))
 define KernelPackage/multimedia-input
   SUBMENU:=$(VIDEO_MENU)
   TITLE:=Multimedia input support
+  DEPENDS:=+kmod-input-core
   KCONFIG:=CONFIG_RC_CORE \
 	CONFIG_LIRC=y \
 	CONFIG_RC_DECODERS=y \
