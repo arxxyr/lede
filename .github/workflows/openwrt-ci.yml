@@ -59,7 +59,9 @@ jobs:
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: make defconfig
+        run: |
+          git restore .config
+          make defconfig
 
       - name: Make download
         run: |
