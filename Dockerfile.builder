@@ -14,6 +14,7 @@ RUN   whoami \
     && make defconfig \
     && make download -j$(nproc) \
     && find dl -size -1024c -exec rm -f {} \; \
+    && make -j$(nproc) || make -j1 V=s 
 VOLUME  /release
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
