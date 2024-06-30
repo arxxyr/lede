@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# for root user
+export FORCE_UNSAFE_CONFIGURE=1
+
 rm -rf ./tmp
 git pull
 sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
