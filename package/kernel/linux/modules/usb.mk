@@ -576,7 +576,7 @@ define KernelPackage/usb-audio
 	CONFIG_SND_USB_AUDIO
   $(call AddDepends/usb)
   $(call AddDepends/sound)
-  DEPENDS += +LINUX_6_1:kmod-media-core
+  DEPENDS+=+(LINUX_6_1||LINUX_6_6):kmod-media-core
   FILES:= \
 	$(LINUX_DIR)/sound/usb/snd-usbmidi-lib.ko \
 	$(LINUX_DIR)/sound/usb/snd-usb-audio.ko
@@ -654,6 +654,22 @@ define KernelPackage/usb-serial-ch341/description
 endef
 
 $(eval $(call KernelPackage,usb-serial-ch341))
+
+
+define KernelPackage/usb-serial-ch348
+  TITLE:=Support for CH348 devices
+  KCONFIG:=CONFIG_USB_SERIAL_CH348
+  FILES:=$(LINUX_DIR)/drivers/usb/serial/ch348.ko
+  AUTOLOAD:=$(call AutoProbe,ch348)
+  DEPENDS:=@(LINUX_6_1||LINUX_6_6)
+  $(call AddDepends/usb-serial)
+endef
+
+define KernelPackage/usb-serial-ch348/description
+ Kernel support for Winchiphead CH348 USB-to-8x-Serial converters
+endef
+
+$(eval $(call KernelPackage,usb-serial-ch348))
 
 
 define KernelPackage/usb-serial-edgeport
