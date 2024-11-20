@@ -14,7 +14,12 @@ PKG_SOURCE_DATE:=2022-12-22
 PKG_SOURCE_VERSION:=5b509e80384ab019ac11aa90c81ec0dbb5b0d7f2
 PKG_MIRROR_HASH:=6fc25df4d28becd010ff4971b23731c08b53e69381a9e4c868091899712f78a9
 PATCH_DIR:=./patches-5.4
-else ifndef ($(filter on,$(CONFIG_LINUX_6_1) $(CONFIG_LINUX_6_6)),)
+else ifdef CONFIG_LINUX_6_1
+PKG_SOURCE_DATE:=2024-04-04
+PKG_SOURCE_VERSION:=8f301a5c5fe3d998b50666bde1d35d412833be89
+PKG_MIRROR_HASH:=49291145ccceeac2964c9a43a46bed88298e5c1da63c6f3c2c1f6b3c1902a61e
+PATCH_DIR:=./patches-6.x
+else ifdef CONFIG_LINUX_6_6
 PKG_SOURCE_DATE:=2024-04-04
 PKG_SOURCE_VERSION:=8f301a5c5fe3d998b50666bde1d35d412833be89
 PKG_MIRROR_HASH:=49291145ccceeac2964c9a43a46bed88298e5c1da63c6f3c2c1f6b3c1902a61e
@@ -342,6 +347,12 @@ define KernelPackage/mt7996-firmware
   DEPENDS+=+kmod-mt7996e
 endef
 
+define KernelPackage/mt7925-firmware
+  $(KernelPackage/mt76-default)
+  TITLE:=MediaTek MT7925 firmware
+  DEPENDS+=+kmod-mt7925e
+endef
+
 define KernelPackage/mt7925-common
   $(KernelPackage/mt76-default)
   TITLE:=MediaTek MT7925 wireless driver common code
@@ -355,7 +366,7 @@ define KernelPackage/mt7925u
   TITLE:=MediaTek MT7925U wireless driver
   DEPENDS+=+kmod-mt792x-usb +kmod-mt7925-common
   FILES:= $(PKG_BUILD_DIR)/mt7925/mt7925u.ko
-  AUTOLOAD:=$(call AutoProbe,mt7921u)
+  AUTOLOAD:=$(call AutoProbe,mt7925u)
 endef
 
 define KernelPackage/mt7925e
@@ -363,7 +374,7 @@ define KernelPackage/mt7925e
   TITLE:=MediaTek MT7925e wireless driver
   DEPENDS+=@PCI_SUPPORT +kmod-mt7925-common
   FILES:= $(PKG_BUILD_DIR)/mt7925/mt7925e.ko
-  AUTOLOAD:=$(call AutoProbe,mt7921e)
+  AUTOLOAD:=$(call AutoProbe,mt7925e)
 endef
 
 define Package/mt76-test
@@ -629,6 +640,14 @@ define KernelPackage/mt7922-firmware/install
 		$(1)/lib/firmware/mediatek
 endef
 
+define KernelPackage/mt7925-firmware/install
+        $(INSTALL_DIR) $(1)/lib/firmware/mediatek/mt7925
+	cp \
+		$(PKG_BUILD_DIR)/firmware/mt7925/WIFI_MT7925_PATCH_MCU_1_1_hdr.bin \
+		$(PKG_BUILD_DIR)/firmware/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin \
+		$(1)/lib/firmware/mediatek/mt7925
+endef
+
 define KernelPackage/mt7996-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek/mt7996
 	cp \
@@ -674,6 +693,7 @@ $(eval $(call KernelPackage,mt7981-firmware))
 $(eval $(call KernelPackage,mt7986-firmware))
 $(eval $(call KernelPackage,mt7921-firmware))
 $(eval $(call KernelPackage,mt7922-firmware))
+$(eval $(call KernelPackage,mt7925-firmware))
 $(eval $(call KernelPackage,mt792x-common))
 $(eval $(call KernelPackage,mt792x-usb))
 $(eval $(call KernelPackage,mt7921-common))
